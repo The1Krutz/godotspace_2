@@ -1,9 +1,18 @@
-[gd_scene load_steps=4 format=3 uid="uid://k0v4umegtob6"]
+[gd_scene load_steps=7 format=3 uid="uid://k0v4umegtob6"]
 
 [ext_resource type="PackedScene" uid="uid://bdic8b5tog6sa" path="res://TestShip.tscn" id="1_78lxs"]
 [ext_resource type="PackedScene" uid="uid://yh4mxrykxjkf" path="res://PlayerController.tscn" id="2_57dne"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_vhgef"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ya2sc"]
+
+[sub_resource type="Sky" id="Sky_wsfrd"]
+sky_material = SubResource("ProceduralSkyMaterial_ya2sc")
+
+[sub_resource type="Environment" id="Environment_eq3rh"]
+background_mode = 2
+sky = SubResource("Sky_wsfrd")
 
 [node name="Main" type="Node"]
 
@@ -16,9 +25,12 @@ PlayerBody = NodePath("..")
 transform = Transform3D(100, 0, 0, 0, 1, 0, 0, 0, 100, 0, -4, 0)
 mesh = SubResource("BoxMesh_vhgef")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.5, -0.707107, 0.5, 0.707107, -3.09086e-08, 0.707107, -0.5, 0.707107, 0.5, 0, 9, 0)
-
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 9)
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 9, 6, 9)
 current = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_eq3rh")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.5, -0.707107, 0.5, 0.707107, -9.83517e-09, 0.707107, -0.5, 0.707107, 0.5, 0, 9, 0)

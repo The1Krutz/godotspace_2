@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://cidxf08w38v1g"]
+
+[ext_resource type="Script" path="res://BulletShooter.cs" id="1_58qc3"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_xydbw"]
+top_radius = 0.1
+bottom_radius = 0.1
+
+[node name="BulletShooter" type="Node3D"]
+script = ExtResource("1_58qc3")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("CylinderMesh_xydbw")
