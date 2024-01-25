@@ -82,10 +82,14 @@ shape = SubResource("ConvexPolygonShape3D_0rk6q")
 
 [node name="Camera" type="Camera3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -5, 2, 0)
+current = true
 
-[node name="Mounts" type="Node3D" parent="."]
+[node name="PrimaryMounts" type="Node3D" parent="."]
 
-[node name="Gun1" type="Node3D" parent="Mounts"]
+[node name="Gun1" type="Node3D" parent="PrimaryMounts"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1)
 
-[node name="BulletShooter" parent="Mounts/Gun1" instance=ExtResource("1_mnhw8")]
+[node name="BulletShooter" parent="PrimaryMounts/Gun1" instance=ExtResource("1_mnhw8")]
+
+[node name="Gun2" type="Node3D" parent="PrimaryMounts"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, -1)
