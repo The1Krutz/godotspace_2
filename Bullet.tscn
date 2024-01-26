@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://jr3lcxwbnmb6"]
+
+[ext_resource type="Script" path="res://Bullet.cs" id="1_rdsps"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_o74be"]
+size = Vector3(0.3, 0.1, 0.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3t1oa"]
+margin = 0.0
+size = Vector3(0.03, 0.01, 0.01)
+
+[node name="Bullet" type="Area3D"]
+script = ExtResource("1_rdsps")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_o74be")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_3t1oa")
+
+[connection signal="body_entered" from="." to="." method="OnBulletEntered"]

@@ -1,5 +1,7 @@
 using Godot;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GodotSpace2;
 
@@ -38,23 +40,75 @@ public partial class PlayerController : Node
   private float lateralInput;
   private float forwardInput;
   private bool emergencyBrake;
+  private bool isShooting;
+  private readonly List<BulletShooter> primaryWeaponsList = new();
 
   // Constructor
 
   // Lifecycle Hooks
   public override void _Ready()
   {
-    GD.Print("Ready");
-
     PlayerBody.GetNode<Camera3D>("Camera").Current = true;
+
+    // populate the list of all primary weapons on this ship
+    foreach (Node gunMount in GetParent().GetNode<Node3D>("PrimaryMounts").GetChildren())
+    {
+      var shooter = gunMount.GetChildOrNull<BulletShooter>(0);
+
+      if (shooter is not null)
+      {
+        primaryWeaponsList.Add(shooter);
+      }
+    }
+
+    GD.Print(primaryWeaponsList + " " + primaryWeaponsList.Count);
+    GD.Print("Ready");
   }
 
   public override void _Process(double delta)
   {
     float deltaf = (float)delta;
 
-    GetInput();
+    GetMovementInput();
+    HandleMovement(deltaf);
 
+    GetShootingInput();
+    HandleShooting(deltaf);
+  }
+
+  // Public Functions
+
+  // Private Functions
+  private void GetMovementInput()
+  {
+    emergencyBrake = Input.IsActionPressed("emergency_brake");
+
+    forwardInput = Input.GetActionStrength("slide_forward") - Input.GetActionStrength("slide_backward");
+    lateralInput = Input.GetActionStrength("slide_right") - Input.GetActionStrength("slide_left");
+    verticalInput = Input.GetActionStrength("slide_up") - Input.GetActionStrength("slide_down");
+
+    rollInput = Input.GetActionStrength("roll_right") - Input.GetActionStrength("roll_left");
+    pitchInput = Input.GetActionStrength("pitch_up") - Input.GetActionStrength("pitch_down");
+    yawInput = Input.GetActionStrength("yaw_right") - Input.GetActionStrength("yaw_left");
+  }
+
+  private void GetShootingInput()
+  {
+    if (Input.IsActionJustPressed("fire_primary"))
+    {
+      // isShooting = true;
+      // GD.Print("so anyway i started blasting");
+      Shoot();
+    }
+    // if (Input.IsActionJustReleased("fire_primary"))
+    // {
+    //   isShooting = false;
+    //   GD.Print("done shooting");
+    // }
+  }
+
+  private void HandleMovement(float delta)
+  {
     if (emergencyBrake)
     {
       PlayerBody.Velocity = Vector3.Zero;
@@ -67,33 +121,31 @@ public partial class PlayerController : Node
         lateralInput * LateralSpeed
       );
 
-      PlayerBody.MoveAndCollide(movementDir * deltaf);
+      PlayerBody.MoveAndCollide(movementDir * delta);
 
       Transform3D transform = PlayerBody.Transform;
       Basis basis = PlayerBody.Transform.Basis;
 
-      basis = basis.Rotated(basis.X, rollInput * RollSpeed * deltaf);
-      basis = basis.Rotated(basis.Y, -yawInput * YawSpeed * deltaf);
-      basis = basis.Rotated(basis.Z, pitchInput * PitchSpeed * deltaf);
+      basis = basis.Rotated(basis.X, rollInput * RollSpeed * delta);
+      basis = basis.Rotated(basis.Y, -yawInput * YawSpeed * delta);
+      basis = basis.Rotated(basis.Z, pitchInput * PitchSpeed * delta);
 
       transform.Basis = basis;
       PlayerBody.Transform = transform;
     }
   }
 
-  // Public Functions
-
-  // Private Functions
-  private void GetInput()
+  private void HandleShooting(float delta)
   {
-    emergencyBrake = Input.IsActionPressed("emergency_brake");
+    // @todo - also do shooting timer stuff here
+    if (isShooting)
+    {
+      Shoot();
+    }
+  }
 
-    forwardInput = Input.GetActionStrength("slide_forward") - Input.GetActionStrength("slide_backward");
-    lateralInput = Input.GetActionStrength("slide_right") - Input.GetActionStrength("slide_left");
-    verticalInput = Input.GetActionStrength("slide_up") - Input.GetActionStrength("slide_down");
-
-    rollInput = Input.GetActionStrength("roll_right") - Input.GetActionStrength("roll_left");
-    pitchInput = Input.GetActionStrength("pitch_up") - Input.GetActionStrength("pitch_down");
-    yawInput = Input.GetActionStrength("yaw_right") - Input.GetActionStrength("yaw_left");
+  private void Shoot()
+  {
+    primaryWeaponsList.ForEach(shooter => shooter.Shoot());
   }
 }

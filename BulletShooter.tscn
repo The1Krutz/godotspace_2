@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://cidxf08w38v1g"]
+
+[ext_resource type="Script" path="res://BulletShooter.cs" id="1_58qc3"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_tgpnj"]
+size = Vector3(2, 0.1, 0.1)
+
+[node name="BulletShooter" type="MeshInstance3D"]
+mesh = SubResource("BoxMesh_tgpnj")
+script = ExtResource("1_58qc3")
+
+[node name="SpawnPoint" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 0, 0)
