@@ -20,7 +20,6 @@ public partial class BulletShooter : Node3D
   private bool isShooting;
   private Vector3 AimDirection;
   private PackedScene BulletScene;
-  private Basis BulletSpawnPoint;
   private string debugPath;
 
   // Constructor
@@ -32,9 +31,6 @@ public partial class BulletShooter : Node3D
   {
     debugPath = this.GetPath();
     BulletScene = ResourceLoader.Load<PackedScene>("res://Bullet.tscn");
-    BulletSpawnPoint = GetNode<Node3D>("SpawnPoint").Transform.Basis;
-
-    GD.Print(BulletSpawnPoint);
   }
 
   // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -45,19 +41,23 @@ public partial class BulletShooter : Node3D
   // Public Functions
   public void Shoot()
   {
+    SpawnBullet();
     GD.Print(debugPath + " bang!");
-  }
-
-  public void SpawnBullet()
-  {
-    Bullet bullet = BulletScene.Instantiate<Bullet>();
-    AddChild(bullet);
-    bullet.Transform = new Transform3D(BulletSpawnPoint, Position);
   }
 
   // Private Functions
   private void AimAt(Vector3 target)
   {
     AimDirection = target;
+  }
+
+  private void SpawnBullet()
+  {
+    Node3D bulletSpawnPoint = GetNode<Node3D>("SpawnPoint");
+    Bullet bullet = BulletScene.Instantiate<Bullet>();
+
+    GetNode("/root/Main").AddChild(bullet);
+    bullet.Transform = bulletSpawnPoint.GlobalTransform;
+    bullet.Rotation = bulletSpawnPoint.GlobalRotation;
   }
 }

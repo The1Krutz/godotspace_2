@@ -37,7 +37,7 @@ public partial class Bullet : Area3D
 
   public void OnBulletEntered(Node3D body)
   {
-    GD.Print("bullet hits!");
+    GD.Print("bullet hits!" + body);
     QueueFree();
   }
 

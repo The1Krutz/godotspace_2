@@ -1,9 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://k0v4umegtob6"]
+[gd_scene load_steps=8 format=3 uid="uid://k0v4umegtob6"]
 
 [ext_resource type="PackedScene" uid="uid://bdic8b5tog6sa" path="res://TestShip.tscn" id="1_78lxs"]
 [ext_resource type="PackedScene" uid="uid://yh4mxrykxjkf" path="res://PlayerController.tscn" id="2_57dne"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_vhgef"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ya2sc"]
 
@@ -14,16 +12,18 @@ sky_material = SubResource("ProceduralSkyMaterial_ya2sc")
 background_mode = 2
 sky = SubResource("Sky_wsfrd")
 
+[sub_resource type="BoxMesh" id="BoxMesh_vhgef"]
+size = Vector3(100, 1, 100)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_jsrqf"]
+points = PackedVector3Array(-50, -0.5, -50, -50, 0.5, -50, 50, -0.5, -50, -50, -0.5, 50, -50, 0.5, 50, 50, 0.5, -50, 50, -0.5, 50, 50, 0.5, 50)
+
 [node name="Main" type="Node"]
 
 [node name="TestShip" parent="." instance=ExtResource("1_78lxs")]
 
 [node name="PlayerController" parent="TestShip" node_paths=PackedStringArray("PlayerBody") instance=ExtResource("2_57dne")]
 PlayerBody = NodePath("..")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(100, 0, 0, 0, 1, 0, 0, 0, 100, 0, -4, 0)
-mesh = SubResource("BoxMesh_vhgef")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 9, 6, 9)
@@ -34,3 +34,13 @@ environment = SubResource("Environment_eq3rh")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.5, -0.707107, 0.5, 0.707107, -9.83517e-09, 0.707107, -0.5, 0.707107, 0.5, 0, 9, 0)
+
+[node name="Ground" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
+mesh = SubResource("BoxMesh_vhgef")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
+shape = SubResource("ConvexPolygonShape3D_jsrqf")

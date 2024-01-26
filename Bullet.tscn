@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://Bullet.cs" id="1_rdsps"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_o74be"]
-size = Vector3(30, 10, 10)
+size = Vector3(0.3, 0.1, 0.1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_3t1oa"]
 margin = 0.0
@@ -17,3 +17,5 @@ mesh = SubResource("BoxMesh_o74be")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_3t1oa")
+
+[connection signal="body_entered" from="." to="." method="OnBulletEntered"]
